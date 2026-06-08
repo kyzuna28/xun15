@@ -1031,38 +1031,41 @@ vfs_submount(const struct dentry *mountpoint, struct file_system_type *type,
 }
 EXPORT_SYMBOL_GPL(vfs_submount);
 
+static void mntput_no_expire(struct mount *mnt);
+static int do_umount(struct mount *mnt, int flags);
+static inline bool may_mount(void);
+
 static int can_umount(const struct path *path, int flags)
 {
-    struct mount *mnt = real_mount(path->mnt);
+	struct mount *mnt = real_mount(path->mnt);
 
-    if (flags & ~(MNT_FORCE | MNT_DETACH | MNT_EXPIRE | MNT_NOFOLLOW))
-        return -EINVAL;
-    if (!may_mount())
-        return -EPERM;
-    if (path->dentry != path->mnt->mnt_root)
-        return -EINVAL;
-    if (!check_mnt(mnt))
-        return -EINVAL;
-    if (mnt->mnt.mnt_flags & MNT_LOCKED) /* Check option flags */
-        return -EINVAL;
-    if ((flags & MNT_FORCE) && !capable(CAP_SYS_ADMIN))
-        return -EPERM;
-    return 0;
+	if (flags & ~(MNT_FORCE | MNT_DETACH | MNT_EXPIRE))
+		return -EINVAL;
+	if (!may_mount())
+		return -EPERM;
+	if (path->dentry != path->mnt->mnt_root)
+		return -EINVAL;
+	if (!check_mnt(mnt))
+		return -EINVAL;
+	if (mnt->mnt.mnt_flags & MNT_LOCKED)
+		return -EINVAL;
+	if ((flags & MNT_FORCE) && !capable(CAP_SYS_ADMIN))
+		return -EPERM;
+	return 0;
 }
 
 int path_umount(struct path *path, int flags)
 {
-    struct mount *mnt = real_mount(path->mnt);
-    int ret;
+	struct mount *mnt = real_mount(path->mnt);
+	int ret;
 
-    ret = can_umount(path, flags);
-    if (!ret)
-        ret = do_umount(mnt, flags);
+	ret = can_umount(path, flags);
+	if (!ret)
+		ret = do_umount(mnt, flags);
 
-    /* we mustn't call path_put() as that would clear mnt */
-    dput(path->dentry);
-    mntput_no_expire(mnt);
-    return ret;
+	dput(path->dentry);
+	mntput_no_expire(mnt);
+	return ret;
 }
 EXPORT_SYMBOL(path_umount);
 
