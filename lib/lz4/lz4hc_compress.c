@@ -597,7 +597,7 @@ static int LZ4_compress_HC_extStateHC(
 
 	LZ4HC_init(ctx, (const BYTE *)src);
 
-	if (maxDstSize < LZ4_compressBound(srcSize))
+	if (maxDstSize < lz4_compressBound(srcSize))
 		return LZ4HC_compress_generic(ctx, src, dst,
 			srcSize, maxDstSize, compressionLevel, limitedOutput);
 	else
@@ -720,7 +720,7 @@ int LZ4_compress_HC_continue(
 	int inputSize,
 	int maxOutputSize)
 {
-	if (maxOutputSize < LZ4_compressBound(inputSize))
+	if (maxOutputSize < lz4_compressBound(inputSize))
 		return LZ4_compressHC_continue_generic(LZ4_streamHCPtr,
 			source, dest, inputSize, maxOutputSize, limitedOutput);
 	else
