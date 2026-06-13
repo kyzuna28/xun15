@@ -31,6 +31,16 @@ config CRYPTO_FIPS
 	  certification.  You should say no unless you know what
 	  this is.
 
+config CRYPTO_NIAP_FPT_TST_EXT_11
+	tristate "NIAP FPT_TST_EXT.1.1 compliance"
+	depends on CRYPTO_SHA512 && CRYPTO_HMAC
+	depends on CRYPTO_SHA256
+	depends on CRYPTO_AES && CRYPTO_CBC
+	help
+	  This option enables a suite of self-tests during initial start-up to
+	  demonstrate the correct operation of cryptographic functionality, as
+	  required in NIAP FPT_TST_EXT.1.1.
+
 config CRYPTO_ALGAPI
 	tristate
 	select CRYPTO_ALGAPI2
@@ -102,6 +112,15 @@ config CRYPTO_KPP
 	select CRYPTO_ALGAPI
 	select CRYPTO_KPP2
 
+config CRYPTO_ACOMP2
+	tristate
+	select CRYPTO_ALGAPI2
+
+config CRYPTO_ACOMP
+	tristate
+	select CRYPTO_ALGAPI
+	select CRYPTO_ACOMP2
+
 config CRYPTO_RSA
 	tristate "RSA algorithm"
 	select CRYPTO_AKCIPHER
@@ -138,6 +157,7 @@ config CRYPTO_MANAGER2
 	select CRYPTO_BLKCIPHER2
 	select CRYPTO_AKCIPHER2
 	select CRYPTO_KPP2
+	select CRYPTO_ACOMP2
 
 config CRYPTO_USER
 	tristate "Userspace cryptographic algorithm configuration"
@@ -1631,14 +1651,25 @@ config CRYPTO_842
 config CRYPTO_LZ4
 	tristate "LZ4 compression algorithm"
 	select CRYPTO_ALGAPI
+	select CRYPTO_ACOMP2
 	select LZ4_COMPRESS
 	select LZ4_DECOMPRESS
 	help
 	  This is the LZ4 algorithm.
 
+config CRYPTO_LZ4KD
+	tristate "LZ4KD compression algorithm"
+	select CRYPTO_ALGAPI
+	select CRYPTO_ACOMP2
+	select LZ4KD_COMPRESS
+	select LZ4KD_DECOMPRESS
+	help
+	  This is the LZ4KD algorithm.
+
 config CRYPTO_LZ4HC
 	tristate "LZ4HC compression algorithm"
 	select CRYPTO_ALGAPI
+	select CRYPTO_ACOMP2
 	select LZ4HC_COMPRESS
 	select LZ4_DECOMPRESS
 	help
