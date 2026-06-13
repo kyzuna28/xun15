@@ -161,13 +161,13 @@ typedef union {
  **************************************************************************/
 
 /**
- * LZ4_compressBound() - Max. output size in worst case szenarios
+ * lz4_compressBound() - Max. output size in worst case szenarios
  * @isize: Size of the input data
  *
  * Return: Max. size LZ4 may output in a "worst case" szenario
  * (data not compressible)
  */
-static inline int LZ4_compressBound(size_t isize)
+static inline int lz4_compressBound(size_t isize)
 {
 	return LZ4_COMPRESSBOUND(isize);
 }
@@ -185,7 +185,7 @@ static inline int LZ4_compressBound(size_t isize)
  * Compresses 'sourceSize' bytes from buffer 'source'
  * into already allocated 'dest' buffer of size 'maxOutputSize'.
  * Compression is guaranteed to succeed if
- * 'maxOutputSize' >= LZ4_compressBound(inputSize).
+ * 'maxOutputSize' >= lz4_compressBound(inputSize).
  * It also runs faster, so it's a recommended setting.
  * If the function cannot compress 'source' into a more limited 'dest' budget,
  * compression stops *immediately*, and the function result is zero.
@@ -339,7 +339,7 @@ int LZ4_decompress_safe_partial(const char *source, char *dest,
  *
  * Compress data from 'src' into 'dst', using the more powerful
  * but slower "HC" algorithm. Compression is guaranteed to succeed if
- * `dstCapacity >= LZ4_compressBound(srcSize)
+ * `dstCapacity >= lz4_compressBound(srcSize)
  *
  * Return : the number of bytes written into 'dst' or 0 if compression fails.
  */
@@ -403,7 +403,7 @@ int	LZ4_loadDictHC(LZ4_streamHC_t *streamHCPtr, const char *dictionary,
  * (including initial dictionary when present) must remain accessible
  * and unmodified during compression.
  * 'dst' buffer should be sized to handle worst case scenarios, using
- *  LZ4_compressBound(), to ensure operation success.
+ *  lz4_compressBound(), to ensure operation success.
  *  If, for any reason, previous data blocks can't be preserved unmodified
  *  in memory during next compression block,
  *  you must save it to a safer memory space, using LZ4_saveDictHC().
@@ -499,7 +499,7 @@ int LZ4_saveDict(LZ4_stream_t *streamPtr, char *safeBuffer, int dictSize);
  * as dictionary to improve compression ratio.
  * Important : Previous data blocks are assumed to still
  * be present and unmodified !
- * If maxDstSize >= LZ4_compressBound(srcSize),
+ * If maxDstSize >= lz4_compressBound(srcSize),
  * compression is guaranteed to succeed, and runs faster.
  *
  * Return: Number of bytes written into buffer 'dst'  or 0 if compression fails
