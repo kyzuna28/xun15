@@ -281,11 +281,6 @@ struct kgsl_device {
 	struct kgsl_pwrctrl pwrctrl;
 	int open_count;
 
-	/* For GPU inline submission */
-	uint32_t submit_now;
-	spinlock_t submit_lock;
-	bool slumber;
-
 	struct mutex mutex;
 	uint32_t state;
 	uint32_t requested_state;
@@ -722,13 +717,10 @@ void kgsl_device_platform_remove(struct kgsl_device *device);
 
 const char *kgsl_pwrstate_to_str(unsigned int state);
 
-static inline int kgsl_device_snapshot_init(struct kgsl_device *device)
-{
-	return 0;
-}
-static inline void kgsl_device_snapshot(struct kgsl_device *device,
-			struct kgsl_context *context, bool gmu_fault) {}
-static inline void kgsl_device_snapshot_close(struct kgsl_device *device) {}
+int kgsl_device_snapshot_init(struct kgsl_device *device);
+void kgsl_device_snapshot(struct kgsl_device *device,
+			struct kgsl_context *context, bool gmu_fault);
+void kgsl_device_snapshot_close(struct kgsl_device *device);
 
 void kgsl_events_init(void);
 void kgsl_events_exit(void);
