@@ -124,6 +124,9 @@ kernel/configs/android-*.cfg
 #
 Android.bp
 
+# Ignoring out folder
+out/
+
 #
 # JSON compilation database for LSP
 #
